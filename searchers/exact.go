@@ -21,7 +21,7 @@ func NewExact(repoType string) Interface {
 func (e *Exact) Search(query string, limit int) ([]models.Candidate, error) {
 	words := strings.Split(query, " ")
 
-	cnt := make(map[string]int)
+	scores := make(map[string]int)
 
 	for _, word := range words {
 		node, err := e.r.FindExact(word)
@@ -30,13 +30,13 @@ func (e *Exact) Search(query string, limit int) ([]models.Candidate, error) {
 		} else if node == nil {
 			return make([]models.Candidate, 0), nil
 		}
-		for frame := range e.r.GetFramesOfNode(node) {
-			cnt[frame]++
+		for frame, occurences := range e.r.GetFramesOfNode(node) {
+			scores[frame] += occurences
 		}
 	}
 
 	results := make([]models.Candidate, 0)
-	for frame, score := range cnt {
+	for frame, score := range scores {
 		results = append(results, *models.NewCandidate(models.NewRAMFrameFromString(frame), score))
 	}
 

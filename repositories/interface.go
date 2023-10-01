@@ -4,7 +4,7 @@ import "OCRsearch/models"
 
 type Interface interface {
 	FindExact(word string) (models.Node, error)
-	GetFramesOfNode(node models.Node) map[string]bool
+	GetFramesOfNode(node models.Node) map[string]int
 	GetChildrensOfNode(node models.Node) map[rune]models.Node
 	GetChildOfNode(node models.Node, character rune) models.Node
 }

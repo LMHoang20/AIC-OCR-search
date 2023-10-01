@@ -33,7 +33,7 @@ func (r *RAM) FindExact(word string) (models.Node, error) {
 	return currentNode, nil
 }
 
-func (r *RAM) GetFramesOfNode(node models.Node) map[string]bool {
+func (r *RAM) GetFramesOfNode(node models.Node) map[string]int {
 	return *node.(*models.RAMNode).GetFrames()
 }
 

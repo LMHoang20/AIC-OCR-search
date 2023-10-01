@@ -1,18 +1,18 @@
 package models
 
 type RAMNode struct {
-	frames   map[string]bool
+	frames   map[string]int
 	children map[rune]Node
 }
 
 func NewRAMNode() *RAMNode {
 	return &RAMNode{
-		frames:   map[string]bool{},
+		frames:   map[string]int{},
 		children: map[rune]Node{},
 	}
 }
 
-func (n *RAMNode) GetFrames() *map[string]bool {
+func (n *RAMNode) GetFrames() *map[string]int {
 	return &n.frames
 }
 
@@ -33,5 +33,5 @@ func (n *RAMNode) AddChild(character rune, node Node) {
 }
 
 func (n *RAMNode) AddFrame(frame *RAMFrame) {
-	n.frames[frame.String()] = true
+	n.frames[frame.String()] += 1
 }
