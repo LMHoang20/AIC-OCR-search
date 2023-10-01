@@ -2,6 +2,6 @@ package searchers
 
 import "OCRsearch/models"
 
-type Searcher interface {
-	Search(query string) ([]models.Frame, error)
+type Interface interface {
+	Search(query string, limit int) ([]models.Candidate, error)
 }

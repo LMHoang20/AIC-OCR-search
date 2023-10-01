@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"OCRsearch/helpers"
-	"fmt"
+	"OCRsearch/searchers"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -24,6 +25,11 @@ func SearchInstance() *SearchController {
 func (c *SearchController) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	query := vars["query"]
-	fmt.Println(query)
-	helpers.SendResponse(w, http.StatusOK, "OK", nil)
+	limit, err := strconv.Atoi(vars["limit"])
+	if err != nil {
+		helpers.SendResponse(w, http.StatusBadRequest, "Invalid limit", nil)
+		return
+	}
+	candidates, err := searchers.NewExact("RAM").Search(query, limit)
+	helpers.SendResponse(w, http.StatusOK, "OK", candidates)
 }
