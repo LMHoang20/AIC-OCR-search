@@ -1,20 +1,20 @@
 package controllers
 
 import (
+	"OCRsearch/constants"
 	"OCRsearch/helpers"
 	"OCRsearch/searchers"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
-// SearchController is a struct that contains the SearchHandler function
 type SearchController struct{}
 
 var search *SearchController
 
-// SearchInstance is a function that returns a pointer to a SearchController
 func SearchInstance() *SearchController {
 	if search == nil {
 		search = &SearchController{}
@@ -24,12 +24,27 @@ func SearchInstance() *SearchController {
 
 func (c *SearchController) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	query := vars["query"]
+	query := helpers.NormalizeUnicode(vars["query"])
 	limit, err := strconv.Atoi(vars["limit"])
 	if err != nil {
 		helpers.SendResponse(w, http.StatusBadRequest, "Invalid limit", nil)
 		return
+	} else if limit <= 0 {
+		helpers.SendResponse(w, http.StatusBadRequest, "Limit must be greater than 0", nil)
+		return
+	} else if query == "" {
+		helpers.SendResponse(w, http.StatusBadRequest, "Invalid query", nil)
+		return
 	}
-	candidates, err := searchers.NewExact("RAM").Search(query, limit)
+	fmt.Println("Query: ")
+	for _, c := range query {
+		fmt.Printf("%c\n", c)
+	}
+	fmt.Println("Limit: ", limit)
+	candidates, err := searchers.NewExact(constants.DBType).Search(query, limit)
+	if err != nil {
+		helpers.SendResponse(w, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
 	helpers.SendResponse(w, http.StatusOK, "OK", candidates)
 }

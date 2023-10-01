@@ -20,15 +20,27 @@ func RAMInstance() *RAM {
 	return ramInstance
 }
 
-func (r *RAM) FindExact(word string) (*models.Node, error) {
+func (r *RAM) FindExact(word string) (models.Node, error) {
 	currentNode := r.db.GetRoot()
 
 	for _, character := range word {
-		currentNode = (*currentNode).GetChild(character)
+		currentNode = r.GetChildOfNode(currentNode, character)
 		if currentNode == nil {
 			return nil, nil
 		}
 	}
 
 	return currentNode, nil
+}
+
+func (r *RAM) GetFramesOfNode(node models.Node) map[string]bool {
+	return *node.(*models.RAMNode).GetFrames()
+}
+
+func (r *RAM) GetChildrensOfNode(node models.Node) map[rune]models.Node {
+	return *node.(*models.RAMNode).GetChildren()
+}
+
+func (r *RAM) GetChildOfNode(node models.Node, character rune) models.Node {
+	return node.(*models.RAMNode).GetChild(character)
 }
