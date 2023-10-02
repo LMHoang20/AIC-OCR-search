@@ -1,9 +1,9 @@
 package models
 
 type Candidate struct {
-	Filename string
-	FrameID  string
-	Score    int
+	Filename string `json:"filename"`
+	FrameID  string `json:"frame_id"`
+	Score    int    `json:"score"`
 }
 
 func NewCandidate(frame Frame, score int) *Candidate {

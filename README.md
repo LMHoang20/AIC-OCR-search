@@ -25,8 +25,20 @@ go run main.go
 - `message`: `string`, Error message if error
 - `data`: 
     - `filename`: `string`, the filename of the video
-    - `frameID (keyframe number)`: `string (xxxx)`, the frame number of the keyframe
-    - `score`: `float`, the score of the keyframe
+    - `frame_id`: `string`, the frame number of the keyframe
+    - `score`: `int`, the score of the keyframe
 
 #### Example: 
-Search for `Tổng` with `exact` method and return `2` results: `http://localhost:8080/search/exact/T%E1%BB%95ng/2`
+Search for `Tổng` with `exact` method and return `2` results: 
+
+Request: `http://localhost:8080/search/exact/T%E1%BB%95ng/2`
+Response: 
+```
+{
+    "data":[
+        {"filename":"L01_V001","frame_id":"0079","score":2},
+        {"filename":"L01_V001","frame_id":"0067","score":1}],
+    "message":"OK",
+    "status":200
+}
+```
