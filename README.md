@@ -7,9 +7,15 @@ go version go1.21.1 linux/amd64
 
 ## Run 
 
-Run on port `8080`:
+### Run with Go:
 ```go
 go run main.go
+```
+
+### Docker:
+```bash
+docker build -t ocr-search .  
+docker run -dp 127.0.0.1:8080:8080 ocr-search
 ```
 
 ## API
