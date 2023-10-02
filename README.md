@@ -1,5 +1,10 @@
 # AIC-OCR-search
 
+## Go version
+```
+go version go1.21.1 linux/amd64
+```
+
 ## Run 
 
 Run on port `8080`:
