@@ -4,7 +4,6 @@ import (
 	"OCRsearch/constants"
 	"OCRsearch/helpers"
 	"OCRsearch/searchers"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -25,6 +24,7 @@ func SearchInstance() *SearchController {
 func (c *SearchController) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	query := helpers.NormalizeUnicode(vars["query"])
+	method := vars["method"]
 	limit, err := strconv.Atoi(vars["limit"])
 	if err != nil {
 		helpers.SendResponse(w, http.StatusBadRequest, "Invalid limit", nil)
@@ -35,13 +35,15 @@ func (c *SearchController) SearchHandler(w http.ResponseWriter, r *http.Request)
 	} else if query == "" {
 		helpers.SendResponse(w, http.StatusBadRequest, "Invalid query", nil)
 		return
+	} else if method == "" {
+		helpers.SendResponse(w, http.StatusBadRequest, "Invalid method", nil)
 	}
-	fmt.Println("Query: ")
-	for _, c := range query {
-		fmt.Printf("%c\n", c)
+	var searcher searchers.Interface
+	switch method {
+	default:
+		searcher = searchers.NewExact(constants.DBType)
 	}
-	fmt.Println("Limit: ", limit)
-	candidates, err := searchers.NewExact(constants.DBType).Search(query, limit)
+	candidates, err := searcher.Search(query, limit)
 	if err != nil {
 		helpers.SendResponse(w, http.StatusInternalServerError, err.Error(), nil)
 		return
