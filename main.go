@@ -9,7 +9,10 @@ import (
 )
 
 func main() {
-	database.Instance(constants.DBType).Initialize()
+	if err := database.Instance(constants.DBType).Initialize(); err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	r := router.Init()
 

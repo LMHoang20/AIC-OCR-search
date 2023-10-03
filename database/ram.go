@@ -29,6 +29,16 @@ func (r *RAM) GetRoot() models.Node {
 }
 
 func (r *RAM) Initialize() error {
+	if _, err := os.Stat("./database/data"); os.IsNotExist(err) {
+		os.Mkdir("./database/data", 0755)
+		if err = helpers.DownloadFiles(); err != nil {
+			return err
+		}
+	}
+	return r.loadFromDir()
+}
+
+func (r *RAM) loadFromDir() error {
 	items, _ := os.ReadDir("./database/data")
 
 	for _, item := range items {

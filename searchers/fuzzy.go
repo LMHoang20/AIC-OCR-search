@@ -26,10 +26,18 @@ func (f *Fuzzy) Search(query string, limit int) ([]models.Candidate, error) {
 	for _, word := range words {
 		characters := helpers.GetCharacters(word)
 		nodes := f.r.Find(characters, 1)
+		bestScoreOfFrame := make(map[string]float32)
 		for _, nodeWithScore := range nodes {
 			for frame, occurences := range f.r.GetFramesOfNode(nodeWithScore.Node) {
-				scores[frame] += float32(occurences) * nodeWithScore.Score
+				score := float32(occurences) * nodeWithScore.Score
+				val, ok := bestScoreOfFrame[frame]
+				if !ok || val < score {
+					bestScoreOfFrame[frame] = score
+				}
 			}
+		}
+		for frame, score := range bestScoreOfFrame {
+			scores[frame] += score
 		}
 	}
 
