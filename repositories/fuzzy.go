@@ -34,6 +34,10 @@ func pushMemoize(pq *models.PriorityQueue, dp *map[string]bool, node models.Node
 }
 
 func (r *Fuzzy) Find(characters []rune, limit int) []models.NodeWithScore {
+	if len(characters) == 0 {
+		return []models.NodeWithScore{}
+	}
+
 	result := make([]models.NodeWithScore, 0)
 
 	n := len(characters)

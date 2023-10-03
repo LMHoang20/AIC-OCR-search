@@ -20,7 +20,7 @@ func NewFuzzy(repoType string) *Fuzzy {
 }
 
 func (f *Fuzzy) Search(query string, limit int) ([]models.Candidate, error) {
-	words := strings.Split(query, " ")
+	words := strings.Fields(query)
 
 	scores := make(map[string]float32)
 
