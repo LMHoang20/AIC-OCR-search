@@ -12,7 +12,7 @@ type Exact struct {
 	r repositories.Interface
 }
 
-func NewExact(DBType string) Interface {
+func NewExact(DBType string) *Exact {
 	return &Exact{r: repositories.NewExact(DBType)}
 }
 

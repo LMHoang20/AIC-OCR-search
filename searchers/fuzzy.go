@@ -4,6 +4,7 @@ import (
 	"OCRsearch/helpers"
 	"OCRsearch/models"
 	"OCRsearch/repositories"
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -12,7 +13,7 @@ type Fuzzy struct {
 	r repositories.Interface
 }
 
-func NewFuzzy(repoType string) Interface {
+func NewFuzzy(repoType string) *Fuzzy {
 	return &Fuzzy{
 		r: repositories.NewFuzzy(repoType),
 	}
@@ -28,6 +29,7 @@ func (f *Fuzzy) Search(query string, limit int) ([]models.Candidate, error) {
 		nodes := f.r.Find(characters, 1)
 		for _, nodeWithScore := range nodes {
 			for frame, occurences := range f.r.GetFramesOfNode(nodeWithScore.Node) {
+				fmt.Println(frame, occurences, nodeWithScore)
 				scores[frame] += float32(occurences) * nodeWithScore.Score
 			}
 		}

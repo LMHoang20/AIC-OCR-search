@@ -19,7 +19,7 @@ func NewFuzzy(DBType string) *Fuzzy {
 }
 
 func calculateScore(len int, penalty float32) float32 {
-	return 1 - penalty/float32(len)
+	return float32(len) - penalty
 }
 
 func stateString(node models.Node, match int) string {
@@ -55,21 +55,24 @@ func (r *Fuzzy) Find(characters []rune, limit int) []models.NodeWithScore {
 		if match == n {
 			if !added[node.GetID()] {
 				added[node.GetID()] = true
-				result = append(result, *models.NewNodeWithScore(node, calculateScore(n, penalty)))
+				if len(r.GetFramesOfNode(node)) > 0 {
+					result = append(result, *models.NewNodeWithScore(node, calculateScore(n, penalty)))
+				}
 			}
-			continue
 		}
 		for character, child := range r.g.GetChildrensOfNode(node) {
-			if character == rune(characters[match]) {
+			if match < n && character == characters[match] {
 				// match
 				pushMemoize(&pq, &visited, child, penalty, match+1)
 			} else if penalty+1 < maxPenalty {
-				// replace
-				pushMemoize(&pq, &visited, child, penalty+1, match+1)
+				if match < n {
+					// replace
+					pushMemoize(&pq, &visited, child, penalty+1, match+1)
+					// delete
+					pushMemoize(&pq, &visited, node, penalty+1, match+1)
+				}
 				// insert
 				pushMemoize(&pq, &visited, child, penalty+1, match)
-				// delete
-				pushMemoize(&pq, &visited, node, penalty+1, match+1)
 			}
 		}
 	}
