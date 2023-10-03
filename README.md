@@ -27,7 +27,7 @@ docker run -dp 127.0.0.1:8080:8080 ocr-search
 `/search/{method}/{query}/{limit}`
 
 #### Request:
-- `method`: [`exact`, `fuzzy (not implemented)`, `advanced (not implemented)`]
+- `method`: [`exact`, `fuzzy`, `advanced (not implemented)`]
 - `query`: `unicode string`, the query to search for
 - `limit`: return the top `limit` results
 

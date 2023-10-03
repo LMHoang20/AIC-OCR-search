@@ -13,3 +13,11 @@ func NormalizeUnicode(str string) string {
 	}
 	return norm.NFKD.String(result)
 }
+
+func GetCharacters(word string) []rune {
+	var result []rune
+	for _, c := range word {
+		result = append(result, c)
+	}
+	return result
+}

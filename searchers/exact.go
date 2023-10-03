@@ -1,6 +1,7 @@
 package searchers
 
 import (
+	"OCRsearch/helpers"
 	"OCRsearch/models"
 	"OCRsearch/repositories"
 	"sort"
@@ -11,27 +12,22 @@ type Exact struct {
 	r repositories.Interface
 }
 
-func NewExact(repoType string) Interface {
-	switch repoType {
-	default:
-		return &Exact{r: repositories.RAMInstance()}
-	}
+func NewExact(DBType string) Interface {
+	return &Exact{r: repositories.NewExact(DBType)}
 }
 
 func (e *Exact) Search(query string, limit int) ([]models.Candidate, error) {
 	words := strings.Split(query, " ")
 
-	scores := make(map[string]int)
+	scores := make(map[string]float32)
 
 	for _, word := range words {
-		node, err := e.r.FindExact(word)
-		if err != nil {
-			return nil, err
-		} else if node == nil {
-			return make([]models.Candidate, 0), nil
-		}
-		for frame, occurences := range e.r.GetFramesOfNode(node) {
-			scores[frame] += occurences
+		characters := helpers.GetCharacters(word)
+		nodes := e.r.Find(characters, 1)
+		for _, nodeWithScore := range nodes {
+			for frame, occurences := range e.r.GetFramesOfNode(nodeWithScore.Node) {
+				scores[frame] += float32(occurences) * nodeWithScore.Score
+			}
 		}
 	}
 

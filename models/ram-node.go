@@ -1,15 +1,21 @@
 package models
 
 type RAMNode struct {
+	id       int
 	frames   map[string]int
 	children map[rune]Node
 }
 
-func NewRAMNode() *RAMNode {
+func NewRAMNode(id int) *RAMNode {
 	return &RAMNode{
+		id:       id,
 		frames:   map[string]int{},
 		children: map[rune]Node{},
 	}
+}
+
+func (n *RAMNode) GetID() int {
+	return n.id
 }
 
 func (n *RAMNode) GetFrames() *map[string]int {

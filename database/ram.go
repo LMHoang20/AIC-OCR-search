@@ -8,7 +8,8 @@ import (
 )
 
 type RAM struct {
-	root models.RAMNode
+	root    models.RAMNode
+	cntNode int
 }
 
 var ramInstance *RAM
@@ -16,7 +17,8 @@ var ramInstance *RAM
 func RAMInstance() *RAM {
 	if ramInstance == nil {
 		ramInstance = &RAM{
-			root: *models.NewRAMNode(),
+			root:    *models.NewRAMNode(0),
+			cntNode: 1,
 		}
 	}
 	return ramInstance
@@ -54,12 +56,17 @@ func (r *RAM) Initialize() error {
 }
 
 func (r *RAM) insertWord(word string, frame *models.RAMFrame) {
+	if len(word) == 0 {
+		return
+	}
+
 	currentNode := &r.root
 
 	for _, character := range word {
 		nextNode := currentNode.GetChild(character)
 		if nextNode == nil {
-			nextNode = models.NewRAMNode()
+			nextNode = models.NewRAMNode(r.cntNode)
+			r.cntNode += 1
 			currentNode.AddChild(character, nextNode)
 		}
 		currentNode = nextNode.(*models.RAMNode)
