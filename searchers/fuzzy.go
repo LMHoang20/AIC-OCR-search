@@ -4,6 +4,7 @@ import (
 	"OCRsearch/helpers"
 	"OCRsearch/models"
 	"OCRsearch/repositories"
+	"math"
 	"sort"
 	"strings"
 )
@@ -18,18 +19,31 @@ func NewFuzzy(repoType string) *Fuzzy {
 	}
 }
 
+func calculateScore(cnt int, occurences int, score float32) float32 {
+	return float32(float64(score) * math.Exp(-2*float64((cnt-occurences)*(cnt-occurences))/float64(cnt)))
+}
+
 func (f *Fuzzy) Search(query string, limit int) ([]models.Candidate, error) {
 	words := strings.Fields(query)
 
-	scores := make(map[string]float32)
+	wordmap := make(map[string]int)
 
 	for _, word := range words {
+		wordmap[word]++
+	}
+
+	scores := make(map[string]float32)
+
+	for word, cnt := range wordmap {
 		characters := helpers.GetCharacters(word)
 		nodes := f.r.Find(characters, 1)
 		bestScoreOfFrame := make(map[string]float32)
 		for _, nodeWithScore := range nodes {
 			for frame, occurences := range f.r.GetFramesOfNode(nodeWithScore.Node) {
-				score := float32(occurences) * nodeWithScore.Score
+				if nodeWithScore.Score == 0 {
+					continue
+				}
+				score := calculateScore(cnt, occurences, nodeWithScore.Score)
 				val, ok := bestScoreOfFrame[frame]
 				if !ok || val < score {
 					bestScoreOfFrame[frame] = score
