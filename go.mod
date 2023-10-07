@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	cloud.google.com/go/storage v1.30.1
 	github.com/gorilla/mux v1.8.0
+	github.com/rs/cors v1.10.1
 	golang.org/x/text v0.13.0
 )
 

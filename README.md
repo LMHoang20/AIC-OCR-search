@@ -15,7 +15,7 @@ go run main.go
 ### Docker:
 ```bash
 docker build -t ocr-search .  
-docker run -dp 127.0.0.1:8080:8080 ocr-search
+docker run -dp 0.0.0.0:8080:8080 ocr-search
 ```
 
 ## API
@@ -44,9 +44,10 @@ docker run -dp 127.0.0.1:8080:8080 ocr-search
     - `score`: `int`, the score of the keyframe
 
 #### Example: 
-Search for `Vietnam` with `fuzzy` method and return `4` results: 
+Search for `vietnam` with `fuzzy` method and return `4` results: 
 
 Request: `http://localhost:8080/search/fuzzy`
+
 Body: 
 ```json
 {
@@ -67,5 +68,4 @@ Response:
     "message":"OK",
     "status":200
 }
-
 ```
