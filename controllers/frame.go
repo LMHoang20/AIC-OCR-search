@@ -79,7 +79,7 @@ func ReadFolder(folder string, filename string) ([]MetaFrame, error) {
 		size := 4
 		videoNumber, _ := strconv.Atoi(filename[1:3])
 
-		if videoNumber >= 17 {
+		if videoNumber >= 17 || folder[4:] == "subframes" {
 			size = 3
 		}
 
