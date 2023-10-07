@@ -14,8 +14,8 @@ go run main.go
 
 ### Docker:
 ```bash
-docker build -t ocr-search .  
-docker run -dp 0.0.0.0:8080:8080 ocr-search
+sudo docker build -t ocr-search .  
+sudo docker run -dp 0.0.0.0:8080:8080 ocr-search
 ```
 
 ## API

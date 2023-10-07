@@ -2,6 +2,7 @@ package main
 
 import (
 	"OCRsearch/constants"
+	"OCRsearch/controllers"
 	"OCRsearch/database"
 	"OCRsearch/router"
 	"fmt"
@@ -21,6 +22,19 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
+	mergedFrames, err := controllers.GetMetadata("L06_V001")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	result := controllers.FormatResult(mergedFrames)
+
+	fmt.Println(result)
+
+	return
+
 	if err := database.Instance(constants.DBType).Initialize(); err != nil {
 		fmt.Println(err)
 		return
