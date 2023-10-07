@@ -4,9 +4,8 @@ import (
 	"OCRsearch/constants"
 	"OCRsearch/helpers"
 	"OCRsearch/searchers"
-	"fmt"
+	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -24,18 +23,18 @@ func SearchInstance() *SearchController {
 
 func extractParamsSearchRequest(r *http.Request) (string, string, int, error) {
 	vars := mux.Vars(r)
-	query := helpers.NormalizeUnicode(vars["query"])
-	method := vars["method"]
-	limit, err := strconv.Atoi(vars["limit"])
+	type Body struct {
+		QueryText string `json:"query_text"`
+		Topk      int    `json:"topk"`
+	}
+	var body Body
+	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		return "", "", 0, err
-	} else if limit <= 0 {
-		return "", "", 0, fmt.Errorf("Invalid limit")
-	} else if query == "" {
-		return "", "", 0, fmt.Errorf("Invalid query")
-	} else if method == "" {
-		return "", "", 0, fmt.Errorf("Invalid method")
 	}
+	method := vars["method"]
+	query := body.QueryText
+	limit := body.Topk
 	return query, method, limit, nil
 }
 
