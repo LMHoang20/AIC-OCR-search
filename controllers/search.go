@@ -33,7 +33,7 @@ func extractParamsSearchRequest(r *http.Request) (string, string, int, error) {
 		return "", "", 0, err
 	}
 	method := vars["method"]
-	query := body.QueryText
+	query := helpers.NormalizeUnicode(body.QueryText)
 	limit := body.Topk
 	return query, method, limit, nil
 }

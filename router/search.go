@@ -7,5 +7,5 @@ import (
 )
 
 func initSearch(r *mux.Router) {
-	r.HandleFunc("/search/{method}", controllers.SearchInstance().SearchHandler).Methods("POST")
+	r.HandleFunc("/search/{method}", controllers.SearchInstance().SearchHandler).Methods("POST", "OPTIONS")
 }
